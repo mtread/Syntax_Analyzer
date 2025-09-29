@@ -1,0 +1,24 @@
+# Author: Mackenzie Treadway
+# Date: 09-15-2025
+#
+# Makefile to build the parser and scanner into an executable called "parser"
+
+parser: parser.tab.o lex.yy.o listing.o main.o
+	g++ -std=c++11 -o parser parser.tab.o lex.yy.o listing.o main.o -ll
+
+parser.tab.o: parser.y
+	bison -d parser.y
+	g++ -std=c++11 -c parser.tab.c
+
+lex.yy.o: scanner.l
+	flex scanner.l
+	g++ -std=c++11 -c lex.yy.c
+
+listing.o: listing.cc listing.h
+	g++ -std=c++11 -c listing.cc
+
+main.o: main.cc listing.h
+	g++ -std=c++11 -c main.cc
+
+clean:
+	rm -f parser *.o parser.tab.* lex.yy.*
